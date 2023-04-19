@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Modèles{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/models.css') }}">
+{% endblock %}
+
+
+{% block content %}
+
+<div class="flexbox h100vh vertical-allign">
+    <div class="centered-container text-center">
+
+        <div id="step_1" class="step-content active slideIn">
+            <h1 class="step-title" style="font-size: 2.8em"><span class='primary'>Bienvenue !</span></h1>
+            <h3 class="step-subtext">Afin de bien comprendre comment se déroule la création d'une intelligence
+                artificielle, nous allons vous guider avec une très courte introduction sur les fondamentaux de
+                l'application.
+        </div>
+
+        <div id="step_2" class="step-content slideIn">
+            <h1 class="step-title"><span class='primary'>Un modèle ?</span></h1>
+            <h3 class="step-subtext">L'objectif de cette application est de concevoir votre premier
+                <strong class='primary'>modèle</strong> d'IA. Un modèle est le "cerveau" d'une
+                intelligence artificelle, avec lequel vous allez pouvoir
+                faire des <strong class='primary'>prédictions</strong> sur des données.</h3>
+            </h3>
+        </div>
+
+        <div id="step_3" class="step-content slideIn">
+            <h1 class="step-title"><span class='primary'>Configuration</span></h1>
+            <h3 class="step-subtext">La première étape consiste à configurer votre modèle. Cette étape permet de définir
+                l'<strong class='primary'>objectif</strong> de votre IA et son fonctionnement (il existe différents
+                types de modèles).</h3>
+        </div>
+
+        <div id="step_4" class="step-content slideIn">
+            <h1 class="step-title"><span class='primary'>Etiquetage</span></h1>
+            <h3 class="step-subtext">Comme pour un enfant, les modèles d'IA doivent apprendre (à reconnaitre un objet,
+                par exemple). Si vous voulez que votre I.A. reconnaissent les chiens des chats il faudra étiqueter des
+                images de chiens et de chats pour que l'IA puisse apprendre à les différencier.</h3>
+            <img src="{{ url_for('static', filename='assets/intro_2.png') }}" alt="logo" class="w100p mtop-1">
+
+        </div>
+
+        <div id="step_5" class="step-content slideIn">
+            <h1 class="step-title"><span class='primary'>Entraînement</span></h1>
+            <h3 class="step-subtext">Une fois que votre modèle est configuré et que vous avez étiqueté vos données, il
+                est temps de l'<strong class='primary'>entraîner</strong>. L'entraînement consiste à faire apprendre à
+                votre modèle à reconnaître les données que vous lui avez fourni.</h3>
+            <img src="{{ url_for('static', filename='assets/intro_3.png') }}" alt="logo" class="w100p mtop-1">
+        </div>
+
+        <div id="step_6" class="step-content slideIn">
+            <h1 class="step-title"><span class='primary'>Prédiction</span></h1>
+            <h3 class="step-subtext">Une fois votre modèle entraîné, vous pourrez directement lui demander de faire des
+                <strong class='primary'>prédictions</strong> sur des données que vous lui fournirez. Vous pourrez aussi
+                télécharger votre modèle pour l'utiliser dans d'autres applications !
+            </h3>
+            <img src="{{ url_for('static', filename='assets/intro_4.png') }}" alt="logo" class="w100p mtop-1">
+        </div>
+
+        <div id="step_7" class="step-content slideIn">
+            <h1 class="step-title"><span class='primary'>Prêt ?</span></h1>
+            <h3 class="step-subtext">Vous êtes maintenant prêt à commencer à créer votre premier modèle d'IA !</h3>
+            <h3 class="step-subtext">Vous pourrez revenir à tout moment sur cette page en cliquant sur le bouton
+                "Comment ça marche ?" dans le menu latéral.</h3>
+
+            <a href="{{ url_for('models.create') }}">
+                <button class="btn-border btn-primary mtop-1">Créer un modèle</button>
+            </a>
+
+        </div>
+
+        <button class="btn-border btn-primary mtop-1" id="next_btn">Suivant</button>
+
+    </div>
+</div>
+
+<script>
+    const maxStepNb = 7;
+</script>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/models.js') }}"></script>
+{% endblock %}

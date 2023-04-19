@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Modèles{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/models.css') }}">
+{% endblock %}
+
+
+{% block content %}
+
+<div class="flexbox h100vh vertical-allign">
+    <div class="centered-container">
+
+        <h1 class="step-title">Vos <span class='primary'>modèles</span> :</h1>
+
+        {% for model in models %}
+        <a href="{{ url_for('models.edit', id=model['id']) }}">
+            <div class="model-el">
+                <h2>{{ model['nom'] }}</h2>
+                <p>Type: {{ model['type'] }}</p>
+                <p>Id: #{{ model['id'] }}</p>
+            </div>
+        </a>
+        {% endfor %}
+
+        <div class="model-el new">
+            <a href="{{ url_for('models.create') }}">
+                <h2>+ Créer un nouveau modèle</h2>
+            </a>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
