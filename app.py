@@ -1,4 +1,5 @@
 import os
+from flask_socketio import SocketIO
 
 from flask import Flask
 
@@ -25,15 +26,18 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # a simple page that says hello
-    @app.route('/hello')
-    def hello():
-        return 'Hello, World!'
-
-    from src.blueprints import models
-    app.register_blueprint(models.bp)
+    from src.blueprints import models, api
+    for bp in [models, api]:
+        app.register_blueprint(bp.bp)
 
     from src import db
     db.init_app(app)
+
+    # démarrer le serveur websocket
+    socketio = SocketIO(app)
+    socketio.run(app)
+
+    from src.websocket import startWS
+    startWS(socketio)
 
     return app

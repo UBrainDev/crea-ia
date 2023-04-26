@@ -1,8 +1,22 @@
 /* SQLITE */
 CREATE TABLE IF NOT EXISTS `models` (
   `id` INTEGER PRIMARY KEY AUTOINCREMENT,
-  `nom` TEXT NOT NULL,
-  `type` INTEGER NOT NULL
+  `nom` TEXT NOT NULL DEFAULT 'model',
+  `type` INTEGER NOT NULL,
+  `tags` TEXT NULL
 );
 
-INSERT INTO `models` (`id`, `nom`, `type`) VALUES (1, 'test', 1);
+CREATE TABLE IF NOT EXISTS `data_elements` (
+  `id` INTEGER PRIMARY KEY AUTOINCREMENT,
+  `model_id` INTEGER NOT NULL,
+  `ext` TEXT NOT NULL,
+  `tags` TEXT,
+  FOREIGN KEY(`model_id`) REFERENCES `models`(`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `labels` (
+  `id` INTEGER PRIMARY KEY AUTOINCREMENT,
+  `model_id` INTEGER NOT NULL,
+  `name` TEXT NOT NULL,
+  FOREIGN KEY(`model_id`) REFERENCES `models`(`id`)
+);

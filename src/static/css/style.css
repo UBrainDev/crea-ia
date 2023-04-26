@@ -43,6 +43,12 @@ body {
     align-items: center;
 }
 
+.flexbox.flex-end {
+    -webkit-justify-content: flex-end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+}
+
 
 /** Tailles **/
 .w100vw {
@@ -126,6 +132,17 @@ a {
     color: #fff;
 }
 
+.btn-border.btn-white {
+    border: 2px solid #fff;
+    color: #fff;
+    background-color: transparent;
+}
+
+.btn-border.btn-white:hover {
+    background-color: #fff;
+    color: rgb(var(--color-primary));
+}
+
 
 /** Animations **/
 @keyframes fadeIn {
@@ -145,7 +162,7 @@ a {
 
 @keyframes slideIn {
     from {
-        transform: translateY(-30%);
+        transform: translateY(-50px);
         opacity: 0;
     }
     to {
@@ -156,7 +173,7 @@ a {
 
 .slideIn {
     animation-name: slideIn;
-    animation-duration: 0.8s;
+    animation-duration: 0.6s;
     animation-fill-mode: forwards;
     animation-timing-function: ease-out;
 }

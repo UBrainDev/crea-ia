@@ -12,6 +12,14 @@
     padding: 1rem;
     margin-top: 1rem;
     transition-duration: 0.2s;
+    gap: 1rem;
+    align-items: center;
+}
+
+.model-el img {
+    width: 70px;
+    height: 70px;
+    margin-top: 6px;
 }
 
 .model-el.new {

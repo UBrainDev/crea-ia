@@ -13,7 +13,8 @@
     <div class="centered-container text-center">
 
         <div id="step_1" class="step-content active slideIn">
-            <h1 class="step-title" style="font-size: 2.8em"><span class='primary'>Bienvenue !</span></h1>
+            <h1 class="step-title" style="font-size: 2.8em"><span
+                    class='primary'>{{ 'Bienvenue !' if id == None else 'Comment ça marche ?' }}</span></h1>
             <h3 class="step-subtext">Afin de bien comprendre comment se déroule la création d'une intelligence
                 artificielle, nous allons vous guider avec une très courte introduction sur les fondamentaux de
                 l'application.
@@ -67,8 +68,9 @@
             <h3 class="step-subtext">Vous pourrez revenir à tout moment sur cette page en cliquant sur le bouton
                 "Comment ça marche ?" dans le menu latéral.</h3>
 
-            <a href="{{ url_for('models.create') }}">
-                <button class="btn-border btn-primary mtop-1">Créer un modèle</button>
+            <a href="{{ url_for('models.create') if id == None else url_for('models.data', id=id) }}">
+                <button
+                    class="btn-border btn-primary mtop-1">{{ 'Créer un modèle' if id == None else 'Retour à l\'éditeur' }}</button>
             </a>
 
         </div>

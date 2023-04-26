@@ -16,10 +16,14 @@
 
         {% for model in models %}
         <a href="{{ url_for('models.edit', id=model['id']) }}">
-            <div class="model-el">
-                <h2>{{ model['nom'] }}</h2>
-                <p>Type: {{ model['type'] }}</p>
-                <p>Id: #{{ model['id'] }}</p>
+            <div class="model-el flexbox">
+                <img src="{{ url_for('static', filename='assets/icons/icon_type'+(model['type']|string)+'.png') }}"
+                    alt="modele">
+                <div>
+                    <h2>{{ model['nom'] }}</h2>
+                    <p>{{ ["Classification d'images", "Détection d'objets", "Classification de texte"][model['type']-1] }}
+                    </p>
+                </div>
             </div>
         </a>
         {% endfor %}
