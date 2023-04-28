@@ -1,0 +1,240 @@
+{% extends 'models/editor/editor.html' %}
+
+{% block title %}Jeu de données{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/editor/train.css') }}">
+{% endblock %}
+
+{% block editor %}
+
+<!-- Ecran d'attente de connexion au websocket -->
+<div id="ecran_attente_connexion" class="h100vh w100p flexbox vertical-allign center">
+    <span class="loader"></span>
+    <h2>Connexion au websocket...</h2>
+</div>
+
+<!-- Ecran d'attente du démarrage de l'entrainement -->
+<div id="ecran_attente_train" class="h100vh w100p flexbox vertical-allign center" style="display:none">
+    <span class="loader"></span>
+    <h2>En attente du démarrage de l'entraînement...</h2>
+</div>
+
+<!-- Ecran de configuration de l'entrainement -->
+<div id="ecran_configuration" class="ecran-configuration h100vh">
+    <div class="flexbox">
+
+        <!-- Pré-configurations -->
+        <div class="preconfigurations config-panel">
+
+            <div class="panel-header">
+                <h1>Préconfigurations</h1>
+            </div>
+
+            <div class="panel-body">
+                <div class="preconfiguration-card" data-preconfig="standard">
+                    <img src="{{ url_for('static', filename='assets/icons/icon_preset_standard.png') }}">
+                    <div>
+                        <h2>Standard</h2>
+                        <p>Une configuration d'hyperparamètres standard pour un entraînement équilibré du modèle.</p>
+                    </div>
+                </div>
+
+                <div class="preconfiguration-card" data-preconfig="rapide">
+                    <img src="{{ url_for('static', filename='assets/icons/icon_preset_rapide.png') }}">
+                    <div>
+                        <h2>Rapide</h2>
+                        <p>Une configuration d'hyperparamètres pour un entraînement rapide, avec un compromis sur la
+                            précision.</p>
+                    </div>
+                </div>
+
+                <div class="preconfiguration-card" data-preconfig="léger">
+                    <img src="{{ url_for('static', filename='assets/icons/icon_preset_leger.png') }}">
+                    <div>
+                        <h2>Léger</h2>
+                        <p>Une configuration d'hyperparamètres adaptée à des ordinateurs peu puissants, permettant un
+                            entraînement plus rapide avec une précision acceptable.</p>
+                    </div>
+                </div>
+
+                <div class="preconfiguration-card" data-preconfig="élaboré">
+                    <img src="{{ url_for('static', filename='assets/icons/icon_preset_elabore.png') }}">
+                    <div>
+                        <h2>Élaboré</h2>
+                        <p>Une configuration d'hyperparamètres améliorés pour un modèle plus complexe, avec une
+                            meilleure précision mais nécessitant des ressources plus importantes.</p>
+                    </div>
+                </div>
+
+                <div class="preconfiguration-card" data-preconfig="profond">
+                    <img src="{{ url_for('static', filename='assets/icons/icon_preset_profond.png') }}">
+                    <div>
+                        <h2>Profond</h2>
+                        <p>Une configuration d'hyperparamètres adaptée à l'entraînement de réseaux de neurones profonds,
+                            nécessitant des ressources importantes.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Configuration -->
+        <div class="configuration config-panel">
+
+            <div class="panel-header">
+                <h1>Hyperparamètres</h1>
+            </div>
+
+            <div class="panel-body">
+
+                <!-- Nombre d'epochs -->
+                <label for="hyperinput_epochs">Nombre d'epochs</label>
+                <input type="number" id="hyperinput_epochs" name="epochs" min="1" max="100" value="1">
+
+                <!-- Taille du batch -->
+                <label for="hyperinput_batch_size">Taille du batch</label>
+                <input type="number" id="hyperinput_batch_size" name="batch_size" min="1" max="100" value="1">
+
+                <!-- Taux d'apprentissage -->
+                <label for="hyperinput_learning_rate">Taux d'apprentissage</label>
+                <input type="number" id="hyperinput_learning_rate" name="learning_rate" min="0.0001" max="1"
+                    step="0.0001" value="0.0001">
+
+                <!-- Dimension des images -->
+                <label for="hyperinput_image_size">Dimension des images</label>
+                <input type="number" id="hyperinput_image_size" name="image_size" min="1" max="1000" value="224">
+
+                <!-- Momentum -->
+                <label for="hyperinput_momentum">Momentum</label>
+                <input type="number" id="hyperinput_momentum" name="momentum" min="0" max="1" step="0.01" value="0.9">
+
+                <!-- Weight decay -->
+                <label for="hyperinput_weight_decay">Dégradation des pondérations</label>
+                <input type="number" id="hyperinput_weight_decay" name="weight_decay" min="0" max="1" step="0.01"
+                    value="0.0001">
+
+            </div>
+        </div>
+
+        <!-- Qualité du jeu d'entrainement -->
+        <div class="train-qualite config-panel">
+            <div class="panel-header">
+                <h1>Qualité</h1>
+            </div>
+            <div class="panel-body">
+                <p>Votre jeu d'entraînement contient un total de <strong id="labeled_count">...</strong> éléments
+                    étiquetés.</p>
+                <div class="qualite-note">
+                    <h1 id="qualite_rank">?</h1>
+                </div>
+                <p id="qualite_rank_text">...</p>
+            </div>
+        </div>
+
+    </div>
+    <div class="flexbox flex-end controls-panel">
+        <button class="btn-primary" id="btn_start_training" onclick="lancerEntrainement()">Démarrer
+            l'entraînement</button>
+    </div>
+</div>
+
+<!-- Ecran d'entrainement -->
+<div id="ecran_entrainement" class="ecran-entrainement h100vh">
+
+    <div class="training-header">
+        <h1>Entrainement en cours...</h1>
+    </div>
+
+    <div class="training-progress flexbox vertical-allign">
+
+        <div class="w100p">
+
+            <div class="progress-container">
+                <div class="flexbox between align-center">
+                    <h2>Epoch <span id="epoch_nb_current">0</span>/<span id="epoch_nb_total">0</span></h2>
+                    <i>Temps restant : <span id="remaining_time">00:00:00</span></i>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-bar-inner flexbox vertical-allign" id="epoch_progress_inner">
+                        <p id="epoch_progress_text">0 / 0it</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-container">
+                <h2>Précision</h2>
+                <div class="progress-bar">
+                    <div class="progress-bar-inner flexbox vertical-allign" id="accuracy_progress_inner">
+                        <p id="accuracy_progress_text">0%</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block modals %}
+
+<div class="modal" id="modal_aucunDocument">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Pas assez de données</h2>
+        </div>
+        <div class="modal-body">
+            <p>
+                Vous devez étiqueter au moins 5 images pour pouvoir entraîner un modèle.
+            </p>
+            <a href="{{ url_for('models.etiquetage', id=model['id']) }}"><button
+                    class="btn-border btn-primary mtop-1">Étiqueter
+                    des images</button></a>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="modal_training_done">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Entrainement terminé !</h2>
+        </div>
+        <div class="modal-body">
+            <p>
+                Votre modèle a été entrainé avec succès et est prêt à être testé. Vous pouvez retrouver le fichier PTH
+                dans le dossier <code>output/{{ model['id'] }}/</code> sous le nom <code
+                    id="trained_model_file">...</code>
+            </p>
+            <button id="try_model" class="btn-border btn-primary mtop-1">Essayer le modèle</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="modal_train_occupe">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Ligne occupée</h2>
+        </div>
+        <div class="modal-body">
+            <p>
+                Un autre modèle est déjà en train d'être entrainé. Vous devez attendre qu'il soit terminé avant de
+                pouvoir en lancer un nouveau.
+            </p>
+            <a href="{{ url_for('models.data', id=model['id'])}}"><button
+                    class="btn-border btn-primary mtop-1">Retour</button></a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
+    integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
+    crossorigin="anonymous"></script>
+
+<script src="{{ url_for('static', filename='js/editor/train.js') }}"></script>
+{% endblock %}

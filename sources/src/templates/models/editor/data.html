@@ -1,0 +1,30 @@
+{% extends 'models/editor/editor.html' %}
+
+{% block title %}Jeu de données{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/editor/data.css') }}">
+{% endblock %}
+
+{% block editor %}
+
+<div class="data-banner">
+    <h1><span id="dataElementsCount">...</span> éléments</h1>
+    <div>
+        <button class="btn-border btn-white" id="openImportFolder">Importer des éléments</button>
+    </div>
+</div>
+
+<div class="data-elements" id="dataElementsContainer">
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/editor/data.js') }}"></script>
+
+<script>
+    getDataElements();
+</script>
+{% endblock %}

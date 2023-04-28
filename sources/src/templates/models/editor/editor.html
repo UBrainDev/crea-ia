@@ -1,0 +1,130 @@
+<!doctype html>
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}{% endblock %} - Crea'IA</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/editor/editor.css') }}">
+    {% block head %}{% endblock %}
+
+    <!-- Font: roboto -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <section class="content">
+
+        <div class="flexbox h100vh">
+            <div class="navbar">
+
+                <div class="nav-item-container flexbox">
+
+                    <div>
+
+                        <!-- Informations sur le modèle actif dans l'éditeur -->
+                        <div class="model-infos flexbox">
+                            <img src="{{ url_for('static', filename='assets/icons/icon_editor.png') }}" alt="modele">
+                            <div class="model-infos__text">
+                                <h1>{{ model['nom'] }}</h1>
+                                <p>{{ ["Classification", "Détection", "Classifi. Texte"][model['type']-1] }}</p>
+                            </div>
+                        </div>
+
+                        <div class="navigation-group">
+
+                            <!-- Elements de nav(igation) principaux -->
+                            <a href="{{ url_for('models.data', id=model['id']) }}">
+                                <div class="nav-item {{ 'active' if page == 'data' else '' }}">
+                                    <img src="{{ url_for('static', filename='assets/icons/navigation_data.png') }}"
+                                        alt="data">
+                                    <p>Jeu de données</p>
+                                </div>
+                            </a>
+                            <a href="{{ url_for('models.etiquetage', id=model['id']) }}">
+                                <div class="nav-item {{ 'active' if page == 'etiquetage' else '' }}">
+                                    <img src="{{ url_for('static', filename='assets/icons/navigation_etiquetage.png') }}"
+                                        alt="etq">
+                                    <p>Etiquetage</p>
+                                </div>
+                            </a>
+                            <a href="{{ url_for('models.entrainement', id=model['id']) }}">
+                                <div class="nav-item {{ 'active' if page == 'train' else '' }}">
+                                    <img src="{{ url_for('static', filename='assets/icons/navigation_entrainement.png') }}"
+                                        alt="etq">
+                                    <p>Entrainement</p>
+                                </div>
+                            </a>
+                            <a href="{{ url_for('models.prediction', id=model['id']) }}">
+                                <div class="nav-item {{ 'active' if page == 'prediction' else '' }}">
+                                    <img src="{{ url_for('static', filename='assets/icons/navigation_prediction.png') }}"
+                                        alt="etq">
+                                    <p>Prédiction</p>
+                                </div>
+                            </a>
+
+                        </div>
+                    </div>
+
+                    <div class="nav-items-bottom navigation-group">
+
+                        <!-- Elements de navigations de bas de page -->
+                        <a href="{{ url_for('models.index') }}">
+                            <div class="nav-item">
+                                <img src="{{ url_for('static', filename='assets/icons/navigation_retour.png') }}"
+                                    alt="back">
+                                <p>Retour</p>
+                            </div>
+                        </a>
+                        <a href="{{ url_for('models.intro', id=model['id']) }}">
+                            <div class="nav-item">
+                                <img src="{{ url_for('static', filename='assets/icons/navigation_ccm.png') }}"
+                                    alt="help">
+                                <p>Comment ça marche ?</p>
+                            </div>
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Contenu -->
+            <div class="editor-content">
+                {% block editor %}
+                {% endblock %}
+            </div>
+
+        </div>
+
+        <!-- Modals -->
+        <div class="modal-container" id="modalContainer">
+            {% block modals %}
+            {% endblock %}
+        </div>
+
+        <!-- js meta -->
+        <script>
+            const modelId = "{{ model['id'] }}";
+            const staticPath = "{{ url_for('static', filename='') }}";
+        </script>
+
+        <!-- script -->
+        <script src="{{ url_for('static', filename='js/editMenu.js') }}"></script>
+        {% block scripts %}
+        {% endblock %}
+
+</body>
+
+</html>

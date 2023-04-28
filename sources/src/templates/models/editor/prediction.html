@@ -1,0 +1,76 @@
+{% extends 'models/editor/editor.html' %}
+
+{% block title %}Prédictions{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/editor/prediction.css') }}">
+{% endblock %}
+
+{% block editor %}
+
+<!-- écran de sélection du modèle entraîné -->
+<div id="selection_screen">
+
+    <div class="data-banner">
+        <h1>Choisir un modèle entraîné</h1>
+    </div>
+
+    <div class="models-list">
+        {% for model in files %}
+        <div class="model" data-model="{{ model[0] }}">
+            <div>
+                <h3>{{ model[0] }}</h3>
+                <p>Entrainé <span data-timestamp="{{ model[1] }}">...</span></p>
+            </div>
+            <div>
+                <button class="btn" onclick="loadModel('{{ model[0] }}')">Choisir</button>
+                <button class="btn" onclick="deleteModel('{{ model[0] }}')">Supprimer</button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+<!-- écran de prédiction -->
+<div id="prediction_screen" class="d-none prediction-screen">
+
+    <div class="data-banner">
+        <h1>Exécution de <span id="model_name">...</span></h1>
+    </div>
+
+    <div class="prediction-content">
+        <div>
+            <label for="image_input" class="import-image-container d-none" id="import_image_container">
+                <h3>Cliquez pour déposer une image</h3>
+                <img src="{{ url_for('static', filename='assets/image_download.png') }}" id="image" alt="Image">
+            </label>
+            <div id="image_preview" alt="Image" class="image-preview d-none">
+                <button class="autre-image" onclick="autreImage()">Choisir une autre image</button>
+            </div>
+
+            <!-- input (caché) -->
+            <input type="file" id="image_input" accept="image/png, image/jpeg, image/jpg" onchange="loadImage()">
+
+        </div>
+
+        <div>
+            <h3>Résultats</h3>
+            <div class="labels-results" id="labels_results">
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+    const selectedFile = '{{ file }}';
+</script>
+
+<script src="{{ url_for('static', filename='js/editor/prediction.js') }}"></script>
+{% endblock %}

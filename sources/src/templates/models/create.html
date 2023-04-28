@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block title %}Modèles{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/models.css') }}">
+{% endblock %}
+
+
+{% block content %}
+
+<div class="flexbox h100vh vertical-allign">
+    <div class="centered-container big">
+
+        <form action="{{ url_for('models.create') }}" method="post">
+
+            <input type="hidden" name="type" id="type_input" value="1">
+
+            <div id="step_1" class="step-content active slideIn text-center">
+                <h1 class="step-title"><span class='primary'>Nom du modèle</span></h1>
+                <input type="text" name="nom" id="nom" placeholder="Entrez ici un nom" class="input-text"
+                    maxlength="80">
+            </div>
+
+            <div id="step_2" class="step-content slideIn">
+                <div class="flexbox select-type-container">
+
+                    <!-- menu de sélection des types -->
+                    <div class="select-type">
+
+                        <h3 class="select-type-title">Type de modèle</h3>
+                        <p class="select-type-text">Quel est l'objectif de l'IA que vous souhaitez créer ?</p>
+
+                        <div class="select-item active" id="select_type_1" data-type="1">Classification d'images</div>
+                        <div class="select-item" id="select_type_2" data-type="2">Détection d'objets</div>
+                        <div class="select-item" id="select_type_3" data-type="3">Classification de texte</div>
+
+                        <button class="btn-border btn-primary mtop-1" id="valider_btn">Valider</button>
+
+                    </div>
+
+                    <div class="select-type-demo">
+                        <div id="type_1" class="select-type-demo-item active">
+                            <h3 class="select-type-demo-title">Classification d'images</h3>
+                            <p class="select-type-demo-text">Permet de classifier des images dans différentes
+                                catégories. Par exemple, vous pourrez créer un modèle qui permet de classifier des
+                                images de chiens et de chats.</p>
+                            <img src="{{ url_for('static', filename='assets/type_demo_1.png') }}" alt="logo"
+                                class="w100p mtop-1">
+                        </div>
+
+                        <div id="type_2" class="select-type-demo-item">
+                            <h3 class="select-type-demo-title">Détection d'objets</h3>
+                            <p class="select-type-demo-text">Permet de détecter des objets dans une image. Par
+                                exemple, vous pourrez créer un modèle qui permet de détecter et d'encadrer les personnes
+                                sur une image.</p>
+                            <img src="{{ url_for('static', filename='assets/type_demo_2.png') }}" alt="logo"
+                                class="w100p mtop-1">
+                        </div>
+
+                        <div id="type_3" class="select-type-demo-item">
+                            <h3 class="select-type-demo-title">Classification de texte</h3>
+                            <p class="select-type-demo-text">Permet de classifier du texte dans différentes
+                                catégories. Par exemple, vous pourrez créer un modèle qui permet de classifier des
+                                commentaires en "positif" ou "négatif".</p>
+                            <img src="{{ url_for('static', filename='assets/type_demo_3.png') }}" alt="logo"
+                                class="w100p mtop-1">
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+
+            <!-- Bouton 'suivant' -->
+            <div class="text-center">
+                <button class="btn-border btn-primary mtop-1" id="next_btn" type="button">Suivant</button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+<script>
+    const maxStepNb = 2;
+</script>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/models.js') }}"></script>
+{% endblock %}
